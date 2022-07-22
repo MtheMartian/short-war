@@ -7,7 +7,12 @@ const MyURL ={
   playerWinHUD: document.querySelector('h2'),
   cardInPileImg: document.createElement('img'), 
   didWarOccur: false,
-  storeSixCards: []
+  storeSixCards: [],
+  storePlayerOnePile: [],
+  storePlayerTwoPile: [],
+  cardsremainingMainDeck: 0,
+  cardsInPileOne: 0,
+  cardsInPileTwo: 0
 }
 
 MyURL.drawThemCards.onclick = drawCards;
@@ -19,6 +24,7 @@ fetch(MyURL.newDeckURL)
    .then(data =>{
     console.log(data);
     MyURL.deckId = data.deck_id
+    MyURL.cardsremainingMainDeck = data.remaining;
    })
 
    .catch(error =>{
@@ -26,12 +32,14 @@ fetch(MyURL.newDeckURL)
    })
 
 function drawCards(){
+  if(MyURL.cardsremainingMainDeck == 0 && MyURL.car)
 fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/draw/?count=2`)   
 .then(function(response){
   return response.json();
 })
 .then(data =>{
   console.log(data);
+  MyURL.cardsremainingMainDeck = data.remaining;
   MyURL.playerOneImg.src = data.cards[0].image;
   MyURL.playerTwoImg.src = data.cards[1].image;
   const firstCard = data.cards[0];
@@ -68,6 +76,7 @@ function convertToNumbers(val){
 function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
   if(firstCardVal > secondCardVal){
     MyURL.playerWinHUD.innerText = "Player 1 Won!";
+    MyURL.storePlayerOnePile.push(secondCard);
     fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${secondCard.code}`)
     .then(function(response){
       return response.json();
@@ -92,6 +101,7 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
   }
   else if(secondCardVal > firstCardVal){
     MyURL.playerWinHUD.innerText = "Player 2 Won!";
+    MyURL.storePlayerTwoPile.push(firstCard);
     fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${firstCard.code}`)
     .then(function(response){
       return response.json();
@@ -115,9 +125,9 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
     }
   }
   else{
+    MyURL.didWarOccur = true;
     MyURL.playerWinHUD.innerText = "WAR!!";
     drawSixCards();
-    MyURL.didWarOccur = true;
   }
 }
 
@@ -174,8 +184,11 @@ function playerTwoCardsWarImg(){
 }
 
 function pOneWarWinAward(arr){
-  arr.forEach(function(x, i){
-    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${arr[i].code}`)
+  let cards = arr;
+  cards.forEach(function(x, i){
+    MyURL.storePlayerOnePile.push(cards[i]);
+  })
+  fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${cards[0].code},${cards[1].code},${cards[2].code},${cards[3].code},${cards[4].code},${cards[5].code}`)
     .then(function(response){
       return response.json();
     })
@@ -186,12 +199,14 @@ function pOneWarWinAward(arr){
     .catch(error => {
       console.log(`Error: ${error}`);
     })
-  })
 }
 
 function pTwoWarWinAward(arr){
-  arr.forEach(function(x, i){
-    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${arr[i].code}`)
+  let cards = arr;
+  cards.forEach(function(x, i){
+    MyURL.storePlayerOnePile.push(cards[i]);
+  })
+    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${cards[0].code},${cards[1].code},${cards[2].code},${cards[3].code},${cards[4].code},${cards[5].code}`)
     .then(function(response){
       return response.json();
     })
@@ -202,8 +217,6 @@ function pTwoWarWinAward(arr){
     .catch(error => {
       console.log(`Error: ${error}`);
     })
-  })
- 
 }
 
 function playerOneWarWinImg(arr){
