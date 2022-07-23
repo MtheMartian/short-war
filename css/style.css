@@ -11,55 +11,45 @@ body{
   background: rgb(133, 78, 28);
   background-size: cover;
   row-gap: 30px;
+  transition: all 0.15s ease-out !important;
 }
 /*------------------Images---------------------*/
 .player-one-card{
   position: absolute;
   top: 10%;
-  right: 45%;
-}
-@media screen and (min-width: 500px) and (max-width: 1300px){
-  .player-one-card, .player-two-card{
-    width: 170px;
-    height: 235.5px;
-  }
 }
 
 .player-two-card{
   position: absolute;
   bottom: 10%;
-  right: 45%;
 }
 
-@media screen and (min-width: 500px) and (max-width: 1300px){
-  .player-two-card, .player-one-card{
-   bottom: 18%;
-   right: 27%;
- }
+.player-one-card, .player-two-card{
+  right: 45%;
+  transition: width 0.15s, height 0.15s, bottom 0.15s, height 0.15s;
+}
+#first-pile, #second-pile{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: margin 0.15s, left 0.15s, top 0.15s;
 }
 
 #first-pile{
-  position: absolute;
   top: 0.5%;
-  left: 7%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#first-pile img, #second-pile img{
-  margin: 0 0 0 -100px;
-  width: 113px;
-  height: 157px;
+  left: 10%;
 }
 
 #second-pile{
-  position: absolute;
   top: 80%;
-  right: 2%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 80%;
+}
+
+#first-pile img, #second-pile img{
+  margin: 0 0 0 -104px;
+  width: 113px;
+  height: 157px;
 }
 
 img{
@@ -67,48 +57,84 @@ img{
   height: 314px;
 }
 
-#player-one-spot{
+#player-one-spot, #player-two-spot{
   position: absolute;
   top: 10%;
-  right: 41.3%;
+  right: 40.3%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-#player-one-spot img{
+#player-one-spot img, #player-two-spot img{
   margin: 0 0 0 -210px;
   border: 1px solid black;
   border-radius: 10px;
 }
 
 #player-two-spot{
-  position: absolute;
   top: 57.3%;
-  right: 41.3%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 }
 
+@media screen and (min-width: 500px) and (max-width: 1000px){
+  #first-pile img, #second-pile img{
+    margin: 0 0 0 -112px;
+  }
+  #first-pile{
+    left: 22%;
+  }
+  #second-pile{
+    top: 80%;
+    left: 97%;
+  }
+}
 
-#player-two-spot img{
-  margin: 0 0 0 -210px;
-  border: 1px solid black;
-  border-radius: 10px;
+@media screen and (min-width: 1001px) and (max-width: 1300px){
+  #first-pile img, #second-pile img{
+    margin: 0 0 0 -110px;
+  }
+  #first-pile{
+    left: 22%;
+  }
+  #second-pile{
+    top: 80%;
+    left: 97%;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 1300px){
+  #player-one-spot img, #player-two-spot img{
+    width: 170px;
+    height: 235.5px;
+    margin: 0 0 0 -190px;
+  }
+  .player-two-card, .player-one-card{
+    bottom: 18%;
+    right: 27%;
+  }
+  .player-one-card, .player-two-card{
+   width: 170px;
+   height: 235.5px;
+ }
+ #player-one-spot, #player-two-spot{
+  right: 28%;
+} 
 }
 /*----------------Text and other stuff-------------------*/
-#firstPlayer{
+
+#firstPlayer, #secondPlayer{
   position: absolute;
+  left: 41.5%;
+  transition: left 0.15s;
+}
+
+#firstPlayer{
   top: 4%;
-  left: 46.5%;
 }
 
 
 #secondPlayer{
-  position: absolute;
   top: 51%;
-  left: 46.5%;
 }
 
 #background{
@@ -151,7 +177,7 @@ img{
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.8);
 }
 
 #instructions{
@@ -161,7 +187,7 @@ img{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 25px;
+  row-gap: 2rem;
 }
 
 #instructions > section{
@@ -169,7 +195,7 @@ img{
 }
 
 #instructions > section p{
-  line-height: 60px;
+  line-height: 150%;
   margin: -30px 0 0 0;
 }
 
@@ -205,6 +231,29 @@ img{
     width: 90%;
     right: -5%;
     top: 40%;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 1600px){
+  #gameTitle{
+    font-size: 1.8rem;
+  }
+  #instructions{
+    font-size: 0.95rem;
+    row-gap: 4.3rem;
+  }
+
+}
+
+@media screen and (min-width: 500px) and (max-width: 900px){
+  #firstPlayer, #secondPlayer{
+    left: 50%;
+  }
+}
+
+@media screen and (min-width: 901px) and (max-width: 1300px){
+  #firstPlayer, #secondPlayer{
+    left: 58%;
   }
 }
 
