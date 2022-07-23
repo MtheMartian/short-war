@@ -1,27 +1,65 @@
+/* --------------General Body---------------*/
+html{
+  font-family: Montserrat ExtraBold;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgb(133, 78, 28);
+  background-size: cover;
+  row-gap: 30px;
+}
+/*------------------Images---------------------*/
+.player-one-card{
+  position: absolute;
+  top: 10%;
+  right: 45%;
+}
+@media screen and (min-width: 500px) and (max-width: 1300px){
+  .player-one-card, .player-two-card{
+    width: 170px;
+    height: 235.5px;
+  }
+}
+
+.player-two-card{
+  position: absolute;
+  bottom: 10%;
+  right: 45%;
+}
+
+@media screen and (min-width: 500px) and (max-width: 1300px){
+  .player-two-card, .player-one-card{
+   bottom: 18%;
+   right: 27%;
+ }
+}
+
 #first-pile{
   position: absolute;
-  top: 100px;
-  left: 580px;
+  top: 0.5%;
+  left: 7%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#first-pile img{
-  margin: 0 0 0 -210px;
+#first-pile img, #second-pile img{
+  margin: 0 0 0 -100px;
+  width: 113px;
+  height: 157px;
 }
 
 #second-pile{
   position: absolute;
-  top: 485px;
-  left: 580px;
+  top: 80%;
+  right: 2%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#second-pile img{
-  margin: 0 0 0 -210px;
 }
 
 img{
@@ -31,8 +69,8 @@ img{
 
 #player-one-spot{
   position: absolute;
-  top: 100px;
-  left: 235px;
+  top: 10%;
+  right: 41.3%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -46,8 +84,8 @@ img{
 
 #player-two-spot{
   position: absolute;
-  top: 485px;
-  left: 235px;
+  top: 57.3%;
+  right: 41.3%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -59,6 +97,114 @@ img{
   border: 1px solid black;
   border-radius: 10px;
 }
+/*----------------Text and other stuff-------------------*/
+#firstPlayer{
+  position: absolute;
+  top: 4%;
+  left: 46.5%;
+}
 
 
+#secondPlayer{
+  position: absolute;
+  top: 51%;
+  left: 46.5%;
+}
+
+#background{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.hidden{
+  display: none;
+}
+
+#scoreHUD{
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  font-size: 7rem;
+  color: beige;
+  width: 25%;
+  z-index: 2;
+}
+@media screen and (max-width: 637px){
+  #scoreHUD{
+    font-size: 5rem;
+    left: 25%;
+  }
+}
+@media screen and (min-width: 638px) and (max-width: 930px){
+  #scoreHUD{
+    left: 25%;
+  }
+}
+
+#instructionPage{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+#instructions{
+  color: white;
+  font-size: 2rem;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 25px;
+}
+
+#instructions > section{
+  width: 55.5%;
+}
+
+#instructions > section p{
+  line-height: 60px;
+  margin: -30px 0 0 0;
+}
+
+#gameTitle{
+  text-decoration: underline;
+  font-size: 3rem;
+}
+
+#instructions button{
+  font-family: Montserrat ExtraBold;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+#instructions > p{
+  margin: -30px 0 0 0;
+}
+
+#instructions span{
+  margin: -15px 0 0 0;
+}
+
+#pressSpacebar{
+  position: absolute;
+  top: 50%;
+  right: 25%;
+  z-index: -1;
+  font-size: 4rem;
+}
+
+@media screen and (min-width: 500px) and (max-width: 1850px){
+  #pressSpacebar{
+    width: 90%;
+    right: -5%;
+    top: 40%;
+  }
+}
 

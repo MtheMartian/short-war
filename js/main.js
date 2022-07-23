@@ -3,10 +3,20 @@ const MyURL ={
   deckId: "",
   playerOneImg: document.querySelector('.player-one-card'),
   playerTwoImg: document.querySelector('.player-two-card'),
-  drawThemCards: document.querySelector('button'),
-  playerWinHUD: document.querySelector('h2'),
+  firstPlayer: document.querySelector('#firstPlayer'),
+  secondPlayer: document.querySelector('#secondPlayer'),
+  instructionPageBtn: document.querySelector('#instructionPageBtn'),
+  instructionPage: document.querySelector('#instructionPage'),
   cardInPileImg: document.createElement('img'), 
+  hideIt: document.querySelector('.hidden'),
+  background: document.querySelector('#background'),
+  scoreHUD: document.querySelector('#scoreHUD'),
+  faceDownPlayerOne: document.querySelector('#player-one-spot'),
+  faceDownPlayerTwo: document.querySelector('#player-two-spot'),
   didWarOccur: false,
+  iUnderstood: false,
+  isLayerOn: false,
+  cardsFaceDownPresent: false,
   storeSixCards: [],
   storePlayerOnePile: [],
   storePlayerTwoPile: [],
@@ -15,30 +25,42 @@ const MyURL ={
   cardsInPileTwo: 0
 }
 
-MyURL.drawThemCards.onclick = drawCards;
-   
-fetch(MyURL.newDeckURL)
-   .then(function(response){
-    return response.json();
-   })
-   .then(data =>{
-    console.log(data);
-    MyURL.deckId = data.deck_id
-    MyURL.cardsremainingMainDeck = data.remaining;
-   })
-
-   .catch(error =>{
-    console.log(`Error: ${error}`);
-   })
-
-function drawCards(){
-  if(MyURL.cardsremainingMainDeck == 0 && MyURL.car)
-fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/draw/?count=2`)   
+MyURL.instructionPageBtn.addEventListener('click', hideInstructions);
+document.querySelector('#pressSpacebar').classList.add('hidden');
+MyURL.playerOneImg.classList.add('hidden');
+MyURL.playerTwoImg.classList.add('hidden');
+MyURL.firstPlayer.classList.add('hidden');
+MyURL.secondPlayer.classList.add('hidden');
+window.addEventListener('keydown', event =>{
+  if(event.code == "Space" && MyURL.iUnderstood && MyURL.isLayerOn == false){
+  document.querySelector('#pressSpacebar').classList.add('hidden');  
+  event.preventDefault();
+  MyURL.firstPlayer.classList.remove('hidden');
+  MyURL.secondPlayer.classList.remove('hidden');
+  MyURL.playerOneImg.classList.remove('hidden');
+  MyURL.playerTwoImg.classList.remove('hidden');
+  if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne > MyURL.cardsInPileTwo)
+  {
+    MyURL.scoreHUD.style.color = "azure";
+    MyURL.scoreHUD.innerText = "Player 1 Won!";
+    MyURL.background.classList.remove('hidden');
+  }
+  else if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne < MyURL.cardsInPileTwo){  
+    MyURL.scoreHUD.style.color = "azure";
+    MyURL.scoreHUD.innerText = "Player 2 Won!";
+    MyURL.background.classList.remove('hidden');
+  }
+  else if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne == MyURL.cardsInPileTwo){
+    MyURL.scoreHUD.style.color = "azure";
+    MyURL.scoreHUD.innerText = "DRAW!";
+    MyURL.background.classList.remove('hidden');
+  }
+  else{
+    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/draw/?count=2`)   
 .then(function(response){
   return response.json();
 })
 .then(data =>{
-  console.log(data);
   MyURL.cardsremainingMainDeck = data.remaining;
   MyURL.playerOneImg.src = data.cards[0].image;
   MyURL.playerTwoImg.src = data.cards[1].image;
@@ -52,7 +74,24 @@ fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/draw/?count=2`)
 .catch(error =>{
   console.log(`Error: ${error}`);
 })
-}
+  }
+  }
+})
+   
+fetch(MyURL.newDeckURL)
+   .then(function(response){
+    return response.json();
+   })
+   .then(data =>{
+    MyURL.deckId = data.deck_id
+    MyURL.cardsremainingMainDeck = data.remaining;
+   })
+
+   .catch(error =>{
+    console.log(`Error: ${error}`);
+   })
+
+MyURL.scoreHUD.addEventListener('click', hideBackground);
 
 function convertToNumbers(val){
   switch(val){
@@ -75,21 +114,21 @@ function convertToNumbers(val){
 
 function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
   if(firstCardVal > secondCardVal){
-    MyURL.playerWinHUD.innerText = "Player 1 Won!";
+    checkIfCardsFaceDownPresent();
     MyURL.storePlayerOnePile.push(secondCard);
     fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${secondCard.code}`)
     .then(function(response){
       return response.json();
     })
     .then(data => {
-      console.log(data);
+      MyURL.cardsInPileOne = data.piles.player1.remaining;
     })
 
     .catch(error => {
       console.log(`Error: ${error}`);
     })
     playerOnePileImg(secondCard);
-    if(MyURL.didWarOccur != false){
+    if(MyURL.cardsFaceDownPresent){
       for(let i = 0; i <= 2; i++){
       document.querySelector('.player-one-cards').remove();
       document.querySelector('.player-two-cards').remove();
@@ -97,24 +136,25 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
       pOneWarWinAward(MyURL.storeSixCards);
       playerOneWarWinImg(MyURL.storeSixCards);
       MyURL.didWarOccur = false;
+      MyURL.scoreHUD.innerText = "";
     }
   }
   else if(secondCardVal > firstCardVal){
-    MyURL.playerWinHUD.innerText = "Player 2 Won!";
+    checkIfCardsFaceDownPresent();
     MyURL.storePlayerTwoPile.push(firstCard);
     fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${firstCard.code}`)
     .then(function(response){
       return response.json();
     })
     .then(data => {
-      console.log(data);
+      MyURL.cardsInPileTwo = data.piles.player2.remaining;
     })
 
     .catch(error => {
       console.log(`Error: ${error}`);
     })
     playerTwoPileImg(firstCard);
-    if(MyURL.didWarOccur != false){
+    if(MyURL.cardsFaceDownPresent){
       for(let i = 0; i <= 2; i++){
         document.querySelector('.player-one-cards').remove();
         document.querySelector('.player-two-cards').remove();
@@ -122,12 +162,16 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
         pTwoWarWinAward(MyURL.storeSixCards);
         playerTwoWarWinImg(MyURL.storeSixCards);
       MyURL.didWarOccur = false;
+      MyURL.scoreHUD.innerText = "";
     }
   }
   else{
     MyURL.didWarOccur = true;
-    MyURL.playerWinHUD.innerText = "WAR!!";
-    drawSixCards();
+    MyURL.isLayerOn = true;
+    MyURL.background.classList.remove('hidden');
+    MyURL.scoreHUD.innerText = "WAR!!";
+    MyURL.scoreHUD.style.color = "red";
+    drawSixCards(); 
   }
 }
 
@@ -144,12 +188,12 @@ function playerTwoPileImg(firstCard){
 }
 
 function drawSixCards(){
+  MyURL.cardsFaceDownPresent = true;
   fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/draw/?count=6`)   
 .then(function(response){
   return response.json();
 })
 .then(data =>{
-  console.log(data);
   const firstCard = data.cards[0];
   playerOneCardsWarImg();
   const secondCard = data.cards[1];
@@ -194,6 +238,7 @@ function pOneWarWinAward(arr){
     })
     .then(data => {
       console.log(data);
+      MyURL.cardsInPileOne = data.piles.player1.remaining;
     })
 
     .catch(error => {
@@ -212,6 +257,7 @@ function pTwoWarWinAward(arr){
     })
     .then(data => {
       console.log(data);
+      MyURL.cardsInPileTwo = data.piles.player2.remaining;
     })
 
     .catch(error => {
@@ -235,6 +281,28 @@ function playerTwoWarWinImg(arr){
   })
 }
 
+function hideBackground(){
+  MyURL.scoreHUD.innerText = "";
+  MyURL.background.classList.add('hidden');
+  MyURL.isLayerOn = false;
+}
+
+function hideInstructions(){
+  MyURL.instructionPage.classList.add('hidden');
+  document.querySelector('#pressSpacebar').classList.remove('hidden');
+  MyURL.iUnderstood = true;
+}
+
+function checkIfCardsFaceDownPresent(){
+  const playerOneNumOfFaceDownCards = MyURL.faceDownPlayerOne.childElementCount;
+  const playerTwoNumOfFaceDownCards = MyURL.faceDownPlayerTwo.childElementCount;
+  if(playerOneNumOfFaceDownCards == 0 && playerTwoNumOfFaceDownCards == 0){
+    MyURL.cardsFaceDownPresent = false;
+  }
+  else{
+    MyURL.cardsFaceDownPresent = true;
+  }
+  }
 
 
 
