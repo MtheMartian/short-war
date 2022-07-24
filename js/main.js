@@ -13,6 +13,10 @@ const MyURL ={
   scoreHUD: document.querySelector('#scoreHUD'),
   faceDownPlayerOne: document.querySelector('#player-one-spot'),
   faceDownPlayerTwo: document.querySelector('#player-two-spot'),
+  playerOneScore: document.querySelector('#playerOneScore > span'),
+  playerTwoScore: document.querySelector('#playerTwoScore > span'),
+  scores: document.querySelector('#scoreContainer'),
+  didSomeoneWin: false,
   didWarOccur: false,
   iUnderstood: false,
   isLayerOn: false,
@@ -25,12 +29,30 @@ const MyURL ={
   cardsInPileTwo: 0
 }
 
+window.addEventListener('keydown', event =>{
+  if(event.code == "KeyR"){
+    localStorage.clear();
+    location.reload();
+  }
+})
+
+if(localStorage.getItem('playerOneScore') == null && localStorage.getItem('playerTwoScore') == null){
+  localStorage.setItem('playerOneScore', MyURL.playerOneScore.textContent);
+  localStorage.setItem('playerTwoScore', MyURL.playerTwoScore.textContent);
+  document.querySelector('#pressSpacebar').classList.add('hidden'); 
+}
+else{
+  hideInstructions();
+  MyURL.playerOneScore.textContent = localStorage.getItem('playerOneScore');
+  MyURL.playerTwoScore.textContent = localStorage.getItem('playerTwoScore');
+}
+
 MyURL.instructionPageBtn.addEventListener('click', hideInstructions);
-document.querySelector('#pressSpacebar').classList.add('hidden');
 MyURL.playerOneImg.classList.add('hidden');
 MyURL.playerTwoImg.classList.add('hidden');
 MyURL.firstPlayer.classList.add('hidden');
 MyURL.secondPlayer.classList.add('hidden');
+MyURL.scores.classList.add('hidden');
 window.addEventListener('keydown', event =>{
   if(event.code == "Space" && MyURL.iUnderstood && MyURL.isLayerOn == false){
   document.querySelector('#pressSpacebar').classList.add('hidden');  
@@ -39,16 +61,27 @@ window.addEventListener('keydown', event =>{
   MyURL.secondPlayer.classList.remove('hidden');
   MyURL.playerOneImg.classList.remove('hidden');
   MyURL.playerTwoImg.classList.remove('hidden');
+  MyURL.scores.classList.remove('hidden');
   if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne > MyURL.cardsInPileTwo)
   {
     MyURL.scoreHUD.style.color = "azure";
     MyURL.scoreHUD.innerText = "Player 1 Won!";
     MyURL.background.classList.remove('hidden');
+    if(MyURL.didSomeoneWin == false){
+      MyURL.playerOneScore.textContent = (Number(MyURL.playerOneScore.textContent) + 1);
+    }
+    MyURL.didSomeoneWin = true; 
+    localStorage.setItem('playerOneScore', MyURL.playerOneScore.textContent);
   }
   else if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne < MyURL.cardsInPileTwo){  
     MyURL.scoreHUD.style.color = "azure";
     MyURL.scoreHUD.innerText = "Player 2 Won!";
     MyURL.background.classList.remove('hidden');
+    if(MyURL.didSomeoneWin == false){
+      MyURL.playerTwoScore.textContent = (Number(MyURL.playerTwoScore.textContent) + 1);
+    } 
+    MyURL.didSomeoneWin = true;
+    localStorage.setItem('playerTwoScore', MyURL.playerTwoScore.textContent);
   }
   else if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne == MyURL.cardsInPileTwo){
     MyURL.scoreHUD.style.color = "azure";
