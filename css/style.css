@@ -159,6 +159,7 @@ img{
   color: beige;
   width: 25%;
   z-index: 2;
+  cursor: pointer;
 }
 
 #instructionPage{
