@@ -14,19 +14,8 @@ body{
   transition: all 0.15s ease-out !important;
 }
 /*------------------Images---------------------*/
-.player-one-card{
-  position: absolute;
-  top: 10%;
-}
-
-.player-two-card{
-  position: absolute;
-  bottom: 10%;
-}
-
 .player-one-card, .player-two-card{
-  right: 45%;
-  transition: width 0.15s, height 0.15s, bottom 0.15s, height 0.15s;
+  transition: width 0.15s, height 0.15s;
 }
 #first-pile, #second-pile{
   position: absolute;
@@ -58,9 +47,6 @@ img{
 }
 
 #player-one-spot, #player-two-spot{
-  position: absolute;
-  top: 10%;
-  right: 40.3%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -72,8 +58,25 @@ img{
   border-radius: 10px;
 }
 
-#player-two-spot{
-  top: 57.3%;
+#playerOne, #playerTwo, #playersSection, #warCards{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+#playersSection, #warCards{
+  position: absolute;
+  left: 45%;
+  top: 1%;
+  row-gap: 10rem;
+}
+
+#warCards{
+  left: 57.5%;
+  top: 8%;
+  row-gap: 14.2rem;
 }
 
 @media screen and (min-width: 500px) and (max-width: 1000px){
@@ -84,7 +87,7 @@ img{
     left: 23%;
   }
   #second-pile{
-    top: 80%;
+    top: 83%;
     left: 97%;
   }
 }
@@ -108,33 +111,39 @@ img{
     height: 235.5px;
     margin: 0 0 0 -190px;
   }
-  .player-two-card, .player-one-card{
-    bottom: 18%;
-    right: 27%;
-  }
   .player-one-card, .player-two-card{
    width: 170px;
    height: 235.5px;
  }
  #player-one-spot, #player-two-spot{
-  right: 28%;
+  right: 22.5%;
 } 
+#player-two-spot{
+  top: 57%;
+}
+}
+
+@media screen and (min-width: 500px) and (max-width: 545px){
+  #warCards{
+    left: 78.5%;
+  }
+}
+
+@media screen and (min-width: 546px) and (max-width: 945px){
+  #warCards{
+    right: 10%;
+  }
+}
+
+@media screen and (min-width: 946px) and (max-width: 1300px){
+  #warCards{
+    right: 23%;
+  }
 }
 /*----------------Text and other stuff-------------------*/
 
 #firstPlayer, #secondPlayer{
-  position: absolute;
-  left: 41.5%;
-  transition: left 0.15s;
-}
-
-#firstPlayer{
-  top: 4%;
-}
-
-
-#secondPlayer{
-  top: 51%;
+  padding: 0 0 0 10%;
 }
 
 #background{
@@ -211,7 +220,7 @@ img{
 
 #pressSpacebar{
   position: absolute;
-  top: 50%;
+  top: 60%;
   right: 25%;
   z-index: -1;
   font-size: 4rem;
@@ -250,12 +259,49 @@ img{
   padding: 0 0 0 45%;
 }
 
+#drawCards, #resetAll{
+  position: absolute;
+  border: none;
+  cursor: pointer;
+  font-family: Montserrat ExtraBold;
+  background: none;
+  font-size: 1.5rem;
+  transition: box-shadow 0.15s;
+}
+
+#drawCards{
+  box-shadow: 1px 1px 10px rgba(34, 33, 134, 0.3);
+  top: 47%;
+  left: 48%;
+  transition: opacity 0.15s;
+}
+
+#drawCards:hover{
+  box-shadow: 1px 1px 10px rgba(34, 33, 134, 1);
+}
+
+#drawCards:active{
+  opacity: 0.8;
+}
+
+#resetAll{
+  color: white;
+  box-shadow: 1px 1px 10px rgba(255, 4, 4, 0.55);
+  right: 5%;  
+  top: 2%;
+}
+
+#resetAll:hover{
+  box-shadow: 1px 1px 10px rgba(255, 4, 4, 1);
+}
+
 @media screen and (max-width: 1850px){
   #pressSpacebar{
     width: 90%;
     right: -5%;
-    top: 40%;
+    top: 58%;
   }
+
 }
 
 @media screen and (max-width: 1600px){
@@ -271,9 +317,17 @@ img{
   }
 }
 
+
 @media screen and (max-width: 900px){
   #firstPlayer, #secondPlayer{
     left: 50%;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 1300px){
+  #drawCards{
+    left: 50%;
+    top: 43%;
   }
 }
 

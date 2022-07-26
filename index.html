@@ -11,7 +11,7 @@
     <section id="instructions">
       <h1 id="gameTitle">Card Game: War (Short Ver.)</h1>
       <h1>Instructions:</h1>
-      <p>Press "Spacebar" to draw cards (Will draw for both players)</p>
+      <p>Click "DRAW" to draw cards (Will draw for both players)</p>
       <h2>Game Rules</h2>
       <section>
         <p>
@@ -25,20 +25,28 @@
     <button id="instructionPageBtn">Got It!</button>
     </section>
   </main>
-  <span id="pressSpacebar">Press the "Spacebar" to start...</span>
-  <section id="player-one">
-    <img class="player-one-card" src="" alt="">
-    <h1 id="firstPlayer">Player 1</h1>
-  <section id="player-one-spot">
+  <span id="pressSpacebar">Click on "DRAW" to start...</span>
+  <section id="playersSection">
+    <div id="playerOne">
+      <h1 id="firstPlayer">Player 1</h1>
+      <img class="player-one-card" src="" alt="">
+    </div>
+    <div id="playerTwo">
+      <h1 id="secondPlayer">Player 2</h1>
+      <img class="player-two-card" src="" alt="">
+    </div>
   </section>
+  <div id="warCards">
+    <section id="player-one-spot">
+    </section>
+    <section id="player-two-spot">
+    </section>
+  </div>
+  <section id="player-one">
     <section id="first-pile">
     </section>
   </section>
   <section id="player-two">
-    <img class="player-two-card" src="" alt="">
-    <h1 id="secondPlayer">Player 2</h1>
-    <section id="player-two-spot">
-    </section>
     <section id="second-pile">
     </section>
   </section>
@@ -57,6 +65,8 @@
     </div>
   </section>
 </div>
+<button id="drawCards">DRAW</button>
+<button id="resetAll">RESET</button>
   <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

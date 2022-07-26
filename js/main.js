@@ -16,6 +16,8 @@ const MyURL ={
   playerOneScore: document.querySelector('#playerOneScore > span'),
   playerTwoScore: document.querySelector('#playerTwoScore > span'),
   scores: document.querySelector('#scoreContainer'),
+  drawCards: document.querySelector('#drawCards'),
+  resetAll: document.querySelector('#resetAll'),
   didSomeoneWin: false,
   didWarOccur: false,
   iUnderstood: false,
@@ -24,44 +26,27 @@ const MyURL ={
   storeSixCards: [],
   storePlayerOnePile: [],
   storePlayerTwoPile: [],
+  storeComparedCards: [],
   cardsremainingMainDeck: 0,
   cardsInPileOne: 0,
   cardsInPileTwo: 0
 }
 
-window.addEventListener('keydown', event =>{
-  if(event.code == "KeyR"){
+MyURL.resetAll.addEventListener('click', () =>{
     localStorage.clear();
-    location.reload();
-  }
-})
+    location.reload(); 
+});
 
-if(localStorage.getItem('playerOneScore') == null && localStorage.getItem('playerTwoScore') == null){
-  localStorage.setItem('playerOneScore', MyURL.playerOneScore.textContent);
-  localStorage.setItem('playerTwoScore', MyURL.playerTwoScore.textContent);
-  document.querySelector('#pressSpacebar').classList.add('hidden'); 
-}
-else{
-  hideInstructions();
-  MyURL.playerOneScore.textContent = localStorage.getItem('playerOneScore');
-  MyURL.playerTwoScore.textContent = localStorage.getItem('playerTwoScore');
-}
+startingState();
 
 MyURL.instructionPageBtn.addEventListener('click', hideInstructions);
-MyURL.playerOneImg.classList.add('hidden');
-MyURL.playerTwoImg.classList.add('hidden');
-MyURL.firstPlayer.classList.add('hidden');
-MyURL.secondPlayer.classList.add('hidden');
-MyURL.scores.classList.add('hidden');
-window.addEventListener('keydown', event =>{
-  if(event.code == "Space" && MyURL.iUnderstood && MyURL.isLayerOn == false){
+
+hideAll();
+
+MyURL.drawCards.addEventListener('click', () =>{
+  if(MyURL.iUnderstood && MyURL.isLayerOn == false){
   document.querySelector('#pressSpacebar').classList.add('hidden');  
-  event.preventDefault();
-  MyURL.firstPlayer.classList.remove('hidden');
-  MyURL.secondPlayer.classList.remove('hidden');
-  MyURL.playerOneImg.classList.remove('hidden');
-  MyURL.playerTwoImg.classList.remove('hidden');
-  MyURL.scores.classList.remove('hidden');
+  unHideAll();
   if(MyURL.cardsremainingMainDeck == 0 && MyURL.cardsInPileOne > MyURL.cardsInPileTwo)
   {
     MyURL.scoreHUD.style.color = "azure";
@@ -146,10 +131,11 @@ function convertToNumbers(val){
 }
 
 function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
+  MyURL.storeComparedCards.push(secondCard, firstCard);
   if(firstCardVal > secondCardVal){
     checkIfCardsFaceDownPresent();
-    MyURL.storePlayerOnePile.push(secondCard);
-    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${secondCard.code}`)
+    MyURL.storePlayerOnePile.push(secondCard, firstCard);
+    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player1/add/?cards=${secondCard.code},${firstCard.code}`)
     .then(function(response){
       return response.json();
     })
@@ -160,7 +146,7 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
     .catch(error => {
       console.log(`Error: ${error}`);
     })
-    playerOnePileImg(secondCard);
+    playerOnePileImg(MyURL.storeComparedCards);
     if(MyURL.cardsFaceDownPresent){
       for(let i = 0; i <= 2; i++){
       document.querySelector('.player-one-cards').remove();
@@ -174,8 +160,8 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
   }
   else if(secondCardVal > firstCardVal){
     checkIfCardsFaceDownPresent();
-    MyURL.storePlayerTwoPile.push(firstCard);
-    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${firstCard.code}`)
+    MyURL.storePlayerTwoPile.push(firstCard, secondCard);
+    fetch(`https://www.deckofcardsapi.com/api/deck/${MyURL.deckId}/pile/player2/add/?cards=${firstCard.code},${secondCard.code}`)
     .then(function(response){
       return response.json();
     })
@@ -186,7 +172,7 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
     .catch(error => {
       console.log(`Error: ${error}`);
     })
-    playerTwoPileImg(firstCard);
+    playerTwoPileImg(MyURL.storeComparedCards);
     if(MyURL.cardsFaceDownPresent){
       for(let i = 0; i <= 2; i++){
         document.querySelector('.player-one-cards').remove();
@@ -208,16 +194,22 @@ function compareCards(firstCardVal, secondCardVal, secondCard, firstCard){
   }
 }
 
-function playerOnePileImg(secondCard){
-  const playerOnePile = document.querySelector('#first-pile').appendChild(MyURL.cardInPileImg.cloneNode());
-  playerOnePile.className = "player-one-pile";
-  playerOnePile.src = secondCard.image;
+function playerOnePileImg(arr){
+  arr.forEach(function(x, i){
+    const playerOnePile = document.querySelector('#first-pile').appendChild(MyURL.cardInPileImg.cloneNode());
+    playerOnePile.className = "player-one-pile";
+    playerOnePile.src = MyURL.storeComparedCards[i].image;
+  }) 
+  MyURL.storeComparedCards.length = 0;
 }
 
-function playerTwoPileImg(firstCard){
-  const playerTwoPile = document.querySelector('#second-pile').appendChild(MyURL.cardInPileImg.cloneNode());
-  playerTwoPile.className = "player-two-pile";
-  playerTwoPile.src = firstCard.image;
+function playerTwoPileImg(arr){
+  arr.forEach(function(x, i){
+    const playerTwoPile = document.querySelector('#second-pile').appendChild(MyURL.cardInPileImg.cloneNode());
+    playerTwoPile.className = "player-two-pile";
+    playerTwoPile.src = MyURL.storeComparedCards[i].image;
+  })
+  MyURL.storeComparedCards.length = 0;
 }
 
 function drawSixCards(){
@@ -323,6 +315,7 @@ function hideBackground(){
 function hideInstructions(){
   MyURL.instructionPage.classList.add('hidden');
   document.querySelector('#pressSpacebar').classList.remove('hidden');
+  MyURL.drawCards.classList.remove('hidden');
   MyURL.iUnderstood = true;
 }
 
@@ -337,6 +330,37 @@ function checkIfCardsFaceDownPresent(){
   }
   }
 
+function hideAll(){
+  MyURL.playerOneImg.classList.add('hidden');
+  MyURL.playerTwoImg.classList.add('hidden');
+  MyURL.firstPlayer.classList.add('hidden');
+  MyURL.secondPlayer.classList.add('hidden');
+  MyURL.scores.classList.add('hidden');
+  MyURL.resetAll.classList.add('hidden');
+ }
+
+function unHideAll(){
+  MyURL.firstPlayer.classList.remove('hidden');
+  MyURL.secondPlayer.classList.remove('hidden');
+  MyURL.playerOneImg.classList.remove('hidden');
+  MyURL.playerTwoImg.classList.remove('hidden');
+  MyURL.scores.classList.remove('hidden');
+  MyURL.resetAll.classList.remove('hidden');
+}
+
+function startingState(){
+  if(localStorage.getItem('playerOneScore') == null && localStorage.getItem('playerTwoScore') == null){
+    localStorage.setItem('playerOneScore', MyURL.playerOneScore.textContent);
+    localStorage.setItem('playerTwoScore', MyURL.playerTwoScore.textContent);
+    document.querySelector('#pressSpacebar').classList.add('hidden'); 
+    MyURL.drawCards.classList.add('hidden');
+  }
+  else{
+    hideInstructions();
+    MyURL.playerOneScore.textContent = localStorage.getItem('playerOneScore');
+    MyURL.playerTwoScore.textContent = localStorage.getItem('playerTwoScore');
+  }
+}
 
 
 
